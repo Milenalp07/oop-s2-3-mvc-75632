@@ -22,8 +22,7 @@ namespace VgcCollege.Web.Controllers
         // GET: StudentProfiles
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.StudentProfiles.Include(s => s.IdentityUser);
-            return View(await applicationDbContext.ToListAsync());
+            return View(await _context.StudentProfiles.ToListAsync());
         }
 
         // GET: StudentProfiles/Details/5
@@ -35,8 +34,8 @@ namespace VgcCollege.Web.Controllers
             }
 
             var studentProfile = await _context.StudentProfiles
-                .Include(s => s.IdentityUser)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (studentProfile == null)
             {
                 return NotFound();
@@ -53,8 +52,6 @@ namespace VgcCollege.Web.Controllers
         }
 
         // POST: StudentProfiles/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,IdentityUserId,Name,Email,Phone,Address,StudentNumber,DOB")] StudentProfile studentProfile)
@@ -65,6 +62,7 @@ namespace VgcCollege.Web.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", studentProfile.IdentityUserId);
             return View(studentProfile);
         }
@@ -82,13 +80,12 @@ namespace VgcCollege.Web.Controllers
             {
                 return NotFound();
             }
+
             ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", studentProfile.IdentityUserId);
             return View(studentProfile);
         }
 
         // POST: StudentProfiles/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,IdentityUserId,Name,Email,Phone,Address,StudentNumber,DOB")] StudentProfile studentProfile)
@@ -116,8 +113,10 @@ namespace VgcCollege.Web.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", studentProfile.IdentityUserId);
             return View(studentProfile);
         }
@@ -131,8 +130,8 @@ namespace VgcCollege.Web.Controllers
             }
 
             var studentProfile = await _context.StudentProfiles
-                .Include(s => s.IdentityUser)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (studentProfile == null)
             {
                 return NotFound();
@@ -147,12 +146,40 @@ namespace VgcCollege.Web.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var studentProfile = await _context.StudentProfiles.FindAsync(id);
+
             if (studentProfile != null)
             {
+                var enrolments = await _context.CourseEnrolments
+                    .Where(e => e.StudentProfileId == id)
+                    .ToListAsync();
+
+                var assignmentResults = await _context.AssignmentResults
+                    .Where(ar => ar.StudentProfileId == id)
+                    .ToListAsync();
+
+                var examResults = await _context.ExamResults
+                    .Where(er => er.StudentProfileId == id)
+                    .ToListAsync();
+
+                if (assignmentResults.Any())
+                {
+                    _context.AssignmentResults.RemoveRange(assignmentResults);
+                }
+
+                if (examResults.Any())
+                {
+                    _context.ExamResults.RemoveRange(examResults);
+                }
+
+                if (enrolments.Any())
+                {
+                    _context.CourseEnrolments.RemoveRange(enrolments);
+                }
+
                 _context.StudentProfiles.Remove(studentProfile);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

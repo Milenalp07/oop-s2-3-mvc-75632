@@ -1,24 +1,30 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using VgcCollege.Web.Models;
+using Microsoft.EntityFrameworkCore;
+using VgcCollege.Web.Data;
+using VgcCollege.Web.Models.ViewModels;
 
-namespace VgcCollege.Web.Controllers;
-
-public class HomeController : Controller
+namespace VgcCollege.Web.Controllers
 {
-    public IActionResult Index()
+    public class HomeController : Controller
     {
-        return View();
-    }
+        private readonly ApplicationDbContext _context;
 
-    public IActionResult Privacy()
-    {
-        return View();
-    }
+        public HomeController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        public async Task<IActionResult> Index()
+        {
+            var vm = new DashboardViewModel
+            {
+                TotalStudents = await _context.StudentProfiles.CountAsync(),
+                TotalCourses = await _context.Courses.CountAsync(),
+                TotalLecturers = await _context.FacultyProfiles.CountAsync(),
+                TotalBranches = await _context.Branches.CountAsync()
+            };
+
+            return View(vm);
+        }
     }
 }

@@ -1,0 +1,55 @@
+﻿@model VgcCollege.Web.Models.AttendanceRecord
+
+@{
+    ViewData["Title"] = "Edit Attendance";
+}
+
+<h1>Edit Attendance</h1>
+
+<h4>Attendance Record</h4>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Edit">
+            <input type="hidden" asp-for="Id" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group mb-3">
+                <label asp-for="CourseEnrolmentId" class="control-label"></label>
+                <select asp-for="CourseEnrolmentId" class="form-control" asp-items="ViewBag.CourseEnrolmentId">
+                    <option value="">-- Select Enrolment --</option>
+                </select>
+                <span asp-validation-for="CourseEnrolmentId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="WeekNumber" class="control-label"></label>
+                <input asp-for="WeekNumber" class="form-control" />
+                <span asp-validation-for="WeekNumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Date" class="control-label"></label>
+                <input asp-for="Date" type="date" class="form-control" />
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+
+            <div class="form-group form-check mb-3">
+                <input class="form-check-input" asp-for="Present" />
+                <label class="form-check-label" asp-for="Present"></label>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

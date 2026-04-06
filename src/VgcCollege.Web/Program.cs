@@ -22,10 +22,11 @@ builder.Host.UseSerilog();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Identity
+// Identity with Roles
 builder.Services
     .AddIdentity<ApplicationUser, IdentityRole>(options =>
     {
+        options.SignIn.RequireConfirmedAccount = false;
         options.Password.RequireDigit = true;
         options.Password.RequireLowercase = true;
         options.Password.RequireUppercase = false;
@@ -33,10 +34,18 @@ builder.Services
         options.Password.RequiredLength = 6;
     })
     .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultUI()
     .AddDefaultTokenProviders();
 
-// MVC
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Identity/Account/Login";
+    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+});
+
+// MVC + Razor Pages
 builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
@@ -58,7 +67,7 @@ else
     app.UseDeveloperExceptionPage();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
@@ -69,5 +78,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapRazorPages();
 
 app.Run();

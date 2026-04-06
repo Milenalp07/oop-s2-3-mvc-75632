@@ -1,5 +1,4 @@
-﻿using Serilog.Parsing;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace VgcCollege.Web.Models
 {
@@ -8,10 +7,9 @@ namespace VgcCollege.Web.Models
         public int Id { get; set; }
 
         [Required]
-        [StringLength(120)]
+        [StringLength(100)]
         public string Name { get; set; } = string.Empty;
 
-        [Required]
         public int BranchId { get; set; }
         public Branch? Branch { get; set; }
 
@@ -21,9 +19,6 @@ namespace VgcCollege.Web.Models
         [DataType(DataType.Date)]
         public DateTime EndDate { get; set; }
 
-        public ICollection<CourseEnrolment> Enrolments { get; set; } = new List<CourseEnrolment>();
-        public ICollection<Assignment> Assignments { get; set; } = new List<Assignment>();
-        public ICollection<Exam> Exams { get; set; } = new List<Exam>();
-        public ICollection<FacultyCourseAssignment> FacultyAssignments { get; set; } = new List<FacultyCourseAssignment>();
+        public ICollection<CourseEnrolment> CourseEnrolments { get; set; } = new List<CourseEnrolment>();
     }
 }

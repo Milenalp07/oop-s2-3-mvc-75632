@@ -34,7 +34,7 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Branch.Address)
+                    @(item.Branch?.Address)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.StartDate)
