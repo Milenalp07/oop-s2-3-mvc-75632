@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace VgcCollege.Web.Models
 {
@@ -7,21 +8,30 @@ namespace VgcCollege.Web.Models
         public int Id { get; set; }
 
         [Required]
-        public int CourseId { get; set; }
-        public Course? Course { get; set; }
-
-        [Required]
-        [StringLength(120)]
+        [StringLength(150)]
+        [Display(Name = "Assignment Title")]
         public string Title { get; set; } = string.Empty;
 
-        [Range(1, 1000)]
-        [Display(Name = "Max Score")]
-        public double MaxScore { get; set; }
+        [StringLength(500)]
+        public string? Description { get; set; }
 
-        [DataType(DataType.Date)]
+        [Required]
         [Display(Name = "Due Date")]
+        [DataType(DataType.Date)]
         public DateTime DueDate { get; set; }
 
-        public ICollection<AssignmentResult> Results { get; set; } = new List<AssignmentResult>();
+        [Required]
+        [Display(Name = "Total Marks")]
+        [Range(0, 1000)]
+        public int TotalMarks { get; set; }
+
+        [Required]
+        [Display(Name = "Course")]
+        public int CourseId { get; set; }
+
+        [ForeignKey(nameof(CourseId))]
+        public Course? Course { get; set; }
+
+        public ICollection<AssignmentResult> AssignmentResults { get; set; } = new List<AssignmentResult>();
     }
 }

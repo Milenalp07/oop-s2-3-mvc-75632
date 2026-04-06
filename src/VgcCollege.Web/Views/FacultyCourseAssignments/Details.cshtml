@@ -1,0 +1,30 @@
+﻿@model VgcCollege.Web.Models.FacultyCourseAssignment
+
+@{
+    ViewData["Title"] = "Assignment Details";
+}
+
+<h1>Assignment Details</h1>
+
+<div>
+    <h4>Faculty Course Assignment</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">Lecturer</dt>
+        <dd class="col-sm-9">@(Model.FacultyProfile?.Name ?? "No lecturer")</dd>
+
+        <dt class="col-sm-3">User Email</dt>
+        <dd class="col-sm-9">@(Model.FacultyProfile?.IdentityUser?.Email ?? "No linked user")</dd>
+
+        <dt class="col-sm-3">Course</dt>
+        <dd class="col-sm-9">@(Model.Course?.Name ?? "No course")</dd>
+
+        <dt class="col-sm-3">Branch</dt>
+        <dd class="col-sm-9">@(Model.Course?.Branch?.Name ?? "No branch")</dd>
+    </dl>
+</div>
+
+<div class="mt-3">
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>

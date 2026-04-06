@@ -1,0 +1,42 @@
+﻿@model VgcCollege.Web.ViewModels.StudentDashboardViewModel
+
+@{
+    ViewData["Title"] = "Student Dashboard";
+}
+
+<div class="p-4 mb-4 bg-light border rounded-3 shadow-sm">
+    <h1 class="display-5 fw-bold">Student Dashboard</h1>
+    <p class="lead">Welcome @(string.IsNullOrEmpty(Model.StudentName) ? "Student" : Model.StudentName). Here you can view your academic information.</p>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h3>My Enrolments</h3>
+                <h2 class="text-primary">@Model.TotalEnrolments</h2>
+                <p>Number of enrolment records linked to your account.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h3>My Courses</h3>
+                <h2 class="text-success">@Model.TotalCourses</h2>
+                <p>Total active courses assigned to you.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h2>Quick Access</h2>
+        <a asp-controller="StudentPortal" asp-action="MyCourses" class="btn btn-outline-success me-2 mb-2">My Courses</a>
+        <a asp-controller="StudentPortal" asp-action="MyAttendance" class="btn btn-outline-dark me-2 mb-2">My Attendance</a>
+        <a asp-controller="StudentPortal" asp-action="MyResults" class="btn btn-outline-info me-2 mb-2">My Results</a>
+        <a asp-controller="StudentPortal" asp-action="MyExams" class="btn btn-outline-primary me-2 mb-2">My Exams</a>
+    </div>
+</div>

@@ -1,0 +1,67 @@
+﻿@model IEnumerable<VgcCollege.Web.Models.ExamResult>
+
+@{
+    ViewData["Title"] = "Exam Results";
+}
+
+<h1>Exam Results</h1>
+
+@if (User.IsInRole("Admin") || User.IsInRole("Faculty"))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Add Result</a>
+    </p>
+}
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Student</th>
+            <th>Exam</th>
+            <th>Course</th>
+            <th>Score</th>
+            <th>Grade</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            var released = item.Exam?.ResultsReleased == true;
+
+            <tr>
+                <td>@(item.StudentProfile?.Name ?? "-")</td>
+                <td>@(item.Exam?.Title ?? "-")</td>
+                <td>@(item.Exam?.Course?.Name ?? "-")</td>
+                <td>@item.Score</td>
+                <td>@item.Grade</td>
+                <td>
+                    @if (released)
+                    {
+                        <span class="badge bg-success">Released</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-warning text-dark">Provisional</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+
+                    @if (User.IsInRole("Admin") || User.IsInRole("Faculty"))
+                    {
+                        <text> | </text>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    }
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <text> | </text>
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

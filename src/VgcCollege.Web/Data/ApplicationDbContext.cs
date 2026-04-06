@@ -52,6 +52,47 @@ namespace VgcCollege.Web.Data
             builder.Entity<AttendanceRecord>()
                 .HasIndex(a => new { a.CourseEnrolmentId, a.WeekNumber })
                 .IsUnique();
+
+            builder.Entity<Exam>()
+                .HasOne(e => e.Course)
+                .WithMany()
+                .HasForeignKey(e => e.CourseId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<ExamResult>()
+                .HasOne(er => er.Exam)
+                .WithMany(e => e.ExamResults)
+                .HasForeignKey(er => er.ExamId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<ExamResult>()
+                .HasOne(er => er.StudentProfile)
+                .WithMany()
+                .HasForeignKey(er => er.StudentProfileId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<ExamResult>()
+                .HasIndex(er => new { er.ExamId, er.StudentProfileId })
+                .IsUnique();
+
+
+            builder.Entity<Assignment>()
+                .HasOne(a => a.Course)
+                .WithMany(c => c.Assignments)
+                .HasForeignKey(a => a.CourseId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<AssignmentResult>()
+                .HasOne(ar => ar.Assignment)
+                .WithMany(a => a.AssignmentResults)
+                .HasForeignKey(ar => ar.AssignmentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<AssignmentResult>()
+                .HasOne(ar => ar.CourseEnrolment)
+                .WithMany(e => e.AssignmentResults)
+                .HasForeignKey(ar => ar.CourseEnrolmentId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

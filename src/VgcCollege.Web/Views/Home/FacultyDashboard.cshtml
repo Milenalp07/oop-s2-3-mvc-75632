@@ -1,0 +1,53 @@
+﻿@model VgcCollege.Web.ViewModels.FacultyDashboardViewModel
+
+@{
+    ViewData["Title"] = "Faculty Dashboard";
+}
+
+<div class="p-4 mb-4 bg-light border rounded-3 shadow-sm">
+    <h1 class="display-5 fw-bold">Faculty Dashboard</h1>
+    <p class="lead">Manage courses, attendance, exams and academic results.</p>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h3>Assigned Courses</h3>
+                <h2 class="text-success">@Model.TotalAssignedCourses</h2>
+                <p>Courses currently assigned to you.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h3>Enrolments</h3>
+                <h2 class="text-primary">@Model.TotalEnrolments</h2>
+                <p>View course enrolment records.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h3>Attendance</h3>
+                <h2 class="text-dark">@Model.TotalAttendanceRecords</h2>
+                <p>Manage attendance records.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h2>Quick Access</h2>
+        <a asp-controller="Courses" asp-action="Index" class="btn btn-outline-success me-2 mb-2">Courses</a>
+        <a asp-controller="CourseEnrolments" asp-action="Index" class="btn btn-outline-secondary me-2 mb-2">Enrolments</a>
+        <a asp-controller="AttendanceRecords" asp-action="Index" class="btn btn-outline-dark me-2 mb-2">Attendance</a>
+        <a asp-controller="AssignmentResults" asp-action="Index" class="btn btn-outline-info me-2 mb-2">Results</a>
+        <a asp-controller="Exams" asp-action="Index" class="btn btn-outline-primary me-2 mb-2">Exams</a>
+    </div>
+</div>

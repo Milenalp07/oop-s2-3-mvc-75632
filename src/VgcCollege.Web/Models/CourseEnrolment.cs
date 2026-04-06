@@ -26,5 +26,7 @@ namespace VgcCollege.Web.Models
         [Required]
         [StringLength(30)]
         public string Status { get; set; } = "Active";
+
+        public ICollection<AssignmentResult> AssignmentResults { get; set; } = new List<AssignmentResult>();
     }
 }

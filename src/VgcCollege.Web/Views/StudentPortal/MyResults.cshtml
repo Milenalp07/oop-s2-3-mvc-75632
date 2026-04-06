@@ -1,0 +1,55 @@
+﻿@model IEnumerable<VgcCollege.Web.Models.AssignmentResult>
+
+@{
+    ViewData["Title"] = "My Results";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <h1 class="mb-2">My Results</h1>
+            <p class="text-muted mb-0">View your assignment results and feedback.</p>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            @if (Model != null && Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Course</th>
+                                <th>Assignment</th>
+                                <th>Due Date</th>
+                                <th>Marks</th>
+                                <th>Grade</th>
+                                <th>Feedback</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Assignment?.Course?.Name</td>
+                                    <td>@item.Assignment?.Title</td>
+                                    <td>@item.Assignment?.DueDate.ToString("dd/MM/yyyy")</td>
+                                    <td>@item.Marks / @item.Assignment?.TotalMarks</td>
+                                    <td>@item.Grade</td>
+                                    <td>@item.Feedback</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info mb-0">
+                    No results found.
+                </div>
+            }
+        </div>
+    </div>
+</div>

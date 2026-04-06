@@ -15,19 +15,17 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+        <nav class="navbar navbar-expand-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">VgcCollege</a>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
-                        aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <div class="collapse navbar-collapse" id="mainNavbar">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
-                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav me-auto mb-2 mb-sm-0">
+                        @if (SignInManager.IsSignedIn(User))
                         {
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="Home" asp-action="Index">Dashboard</a>
@@ -38,54 +36,83 @@
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="StudentProfiles" asp-action="Index">Students</a>
                                 </li>
-
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="CourseEnrolments" asp-action="Index">Enrolments</a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Branches" asp-action="Index">Branches</a>
-                                </li>
-
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="FacultyProfiles" asp-action="Index">Lecturers</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Courses" asp-action="Index">Courses</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Branches" asp-action="Index">Branches</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="CourseEnrolments" asp-action="Index">Enrolments</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="AttendanceRecords" asp-action="Index">Attendance</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="AssignmentResults" asp-action="Index">Results</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Exams" asp-action="Index">Exams</a>
+                                </li>
                             }
-
-                            @if (User.IsInRole("Admin") || User.IsInRole("Faculty"))
+                            else if (User.IsInRole("Faculty"))
                             {
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="Courses" asp-action="Index">Courses</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="CourseEnrolments" asp-action="Index">Enrolments</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="AttendanceRecords" asp-action="Index">Attendance</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="AssignmentResults" asp-action="Index">Results</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Exams" asp-action="Index">Exams</a>
+                                </li>
+                            }
+                            else if (User.IsInRole("Student"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="StudentPortal" asp-action="Index">My Dashboard</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="StudentPortal" asp-action="MyCourses">My Courses</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="StudentPortal" asp-action="MyAttendance">My Attendance</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="StudentPortal" asp-action="MyResults">My Results</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="StudentPortal" asp-action="MyExams">My Exams</a>
                                 </li>
                             }
                         }
                     </ul>
 
-                    <ul class="navbar-nav ms-auto">
+                    <ul class="navbar-nav">
                         @if (SignInManager.IsSignedIn(User))
                         {
-                            <li class="nav-item d-flex align-items-center text-white me-3">
-                                @{
-                                    var currentUser = await UserManager.GetUserAsync(User);
-                                }
-                                <span class="small">
-                                    Hello, @(currentUser?.FullName ?? User.Identity?.Name)
-                                </span>
+                            <li class="nav-item d-flex align-items-center me-2 text-white">
+                                Hello, @User.Identity?.Name
                             </li>
-
                             <li class="nav-item">
-                                <form asp-area="Identity" asp-page="/Account/Logout" method="post" class="d-flex">
-                                    <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
+                                <form asp-area="Identity" asp-page="/Account/Logout" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-outline-light">Logout</button>
                                 </form>
                             </li>
                         }
                         else
                         {
-                            <li class="nav-item me-2">
-                                <a class="btn btn-outline-light btn-sm" asp-area="Identity" asp-page="/Account/Login">Login</a>
-                            </li>
                             <li class="nav-item">
-                                <a class="btn btn-light btn-sm" asp-area="Identity" asp-page="/Account/Register">Register</a>
+                                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
                             </li>
                         }
                     </ul>
@@ -94,19 +121,18 @@
         </nav>
     </header>
 
-    <div class="container mt-4">
+    <div class="container pb-3">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted mt-4">
-        <div class="container py-3">
-            &copy; @DateTime.Now.Year - VgcCollege - Academic Management System
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2026 - VgcCollege - Academic Management System
         </div>
     </footer>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)

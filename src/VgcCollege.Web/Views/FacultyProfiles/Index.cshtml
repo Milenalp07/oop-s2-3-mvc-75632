@@ -1,32 +1,71 @@
 ﻿@model IEnumerable<VgcCollege.Web.Models.FacultyProfile>
 
 @{
-    ViewData["Title"] = "Lecturers";
+    ViewData["Title"] = "Faculty Profiles";
+    var assignmentMap = ViewBag.AssignmentMap as Dictionary<int, VgcCollege.Web.Controllers.FacultyAssignmentSummaryViewModel>
+        ?? new Dictionary<int, VgcCollege.Web.Controllers.FacultyAssignmentSummaryViewModel>();
 }
 
-<h1>Lecturers</h1>
+<h1>Faculty Profiles</h1>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
 
 <p>
-    <a asp-action="Create" class="btn btn-primary">Create New Lecturer</a>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
 </p>
 
-<table class="table">
+<table class="table table-striped table-hover">
     <thead>
         <tr>
             <th>Name</th>
-            <th>Email</th>
+            <th>User Email</th>
+            <th>Phone</th>
+            <th>Courses</th>
+            <th>Total Courses</th>
+            <th>Branches</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
+            var summary = assignmentMap.ContainsKey(item.Id)
+                ? assignmentMap[item.Id]
+                : new VgcCollege.Web.Controllers.FacultyAssignmentSummaryViewModel();
+
             <tr>
                 <td>@item.Name</td>
-                <td>@item.IdentityUser?.Email</td>
+                <td>@(item.IdentityUser?.Email ?? "No linked user")</td>
+                <td>@item.Phone</td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    @if (summary.Courses.Any())
+                    {
+                        @string.Join(", ", summary.Courses)
+                    }
+                    else
+                    {
+                        <span class="text-muted">No courses assigned</span>
+                    }
+                </td>
+                <td>@summary.Courses.Count</td>
+                <td>
+                    @if (summary.Branches.Any())
+                    {
+                        @string.Join(", ", summary.Branches)
+                    }
+                    else
+                    {
+                        <span class="text-muted">No branches</span>
+                    }
+                </td>
+                <td>
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                     <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
             </tr>

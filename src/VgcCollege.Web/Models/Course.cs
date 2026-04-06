@@ -20,5 +20,7 @@ namespace VgcCollege.Web.Models
         public DateTime EndDate { get; set; }
 
         public ICollection<CourseEnrolment> CourseEnrolments { get; set; } = new List<CourseEnrolment>();
+
+        public ICollection<Assignment> Assignments { get; set; } = new List<Assignment>();
     }
 }

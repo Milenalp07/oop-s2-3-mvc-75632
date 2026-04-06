@@ -1,0 +1,53 @@
+﻿@model IEnumerable<VgcCollege.Web.Models.Exam>
+
+@{
+    ViewData["Title"] = "My Exams";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <h1 class="mb-2">My Exams</h1>
+            <p class="text-muted mb-0">Check your scheduled exams and related course details.</p>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            @if (Model != null && Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Course</th>
+                                <th>Exam Title</th>
+                                <th>Date</th>
+                                <th>Location</th>
+                                <th>Total Marks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Course?.Name</td>
+                                    <td>@item.Title</td>
+                                    <td>@item.ExamDate.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td>@item.Location</td>
+                                    <td>@item.TotalMarks</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info mb-0">
+                    No exams found for your enrolled courses.
+                </div>
+            }
+        </div>
+    </div>
+</div>

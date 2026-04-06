@@ -11,19 +11,18 @@ namespace VgcCollege.Web.Models
         public Course? Course { get; set; }
 
         [Required]
-        [StringLength(120)]
+        [StringLength(100)]
         public string Title { get; set; } = string.Empty;
 
         [DataType(DataType.Date)]
         public DateTime Date { get; set; }
 
-        [Range(1, 1000)]
-        [Display(Name = "Max Score")]
-        public double MaxScore { get; set; }
+        [Range(0, 1000)]
+        public int MaxScore { get; set; }
 
         [Display(Name = "Results Released")]
         public bool ResultsReleased { get; set; }
 
-        public ICollection<ExamResult> Results { get; set; } = new List<ExamResult>();
+        public ICollection<ExamResult> ExamResults { get; set; } = new List<ExamResult>();
     }
 }

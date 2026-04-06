@@ -1,0 +1,48 @@
+﻿@model VgcCollege.Web.Models.Exam
+
+@{
+    ViewData["Title"] = "Create Exam";
+}
+
+<h1>Create Exam</h1>
+
+<h4>Exam</h4>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Title"></label>
+                <input asp-for="Title" class="form-control" />
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="CourseId">Course</label>
+                <select asp-for="CourseId" class="form-control" asp-items="ViewBag.CourseId">
+                    <option value="">-- Select Course --</option>
+                </select>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Date"></label>
+                <input asp-for="Date" class="form-control" type="date" />
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="MaxScore"></label>
+                <input asp-for="MaxScore" class="form-control" />
+            </div>
+
+            <div class="form-check mb-3">
+                <input asp-for="ResultsReleased" class="form-check-input" />
+                <label asp-for="ResultsReleased" class="form-check-label"></label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Create</button>
+            <a asp-action="Index" class="btn btn-secondary">Back</a>
+        </form>
+    </div>
+</div>

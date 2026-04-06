@@ -1,0 +1,28 @@
+﻿@model VgcCollege.Web.Models.ExamResult
+
+@{
+    ViewData["Title"] = "Delete Result";
+}
+
+<h1>Delete Result</h1>
+
+<h3>Are you sure?</h3>
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-3">Student</dt>
+        <dd class="col-sm-9">@Model.StudentProfile?.Name</dd>
+
+        <dt class="col-sm-3">Exam</dt>
+        <dd class="col-sm-9">@Model.Exam?.Title</dd>
+
+        <dt class="col-sm-3">Score</dt>
+        <dd class="col-sm-9">@Model.Score</dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <button class="btn btn-danger">Delete</button>
+        <a asp-action="Index" class="btn btn-secondary">Back</a>
+    </form>
+</div>
