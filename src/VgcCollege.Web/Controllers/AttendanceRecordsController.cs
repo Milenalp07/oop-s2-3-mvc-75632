@@ -7,7 +7,7 @@ using VgcCollege.Web.Models;
 
 namespace VgcCollege.Web.Controllers
 {
-    [Authorize(Roles = "Administrator,Faculty")]
+    [Authorize(Roles = "Admin,Faculty")]
     public class AttendanceRecordsController : Controller
     {
         private readonly ApplicationDbContext _context;

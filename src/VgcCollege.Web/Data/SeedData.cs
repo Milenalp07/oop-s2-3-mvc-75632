@@ -130,14 +130,12 @@ namespace VgcCollege.Web.Data
                     {
                         IdentityUserId = facultyUser1.Id,
                         Name = facultyUser1.FullName,
-                        Email = facultyUser1.Email!,
                         Phone = "0850001001"
                     },
                     new FacultyProfile
                     {
                         IdentityUserId = facultyUser2.Id,
                         Name = facultyUser2.FullName,
-                        Email = facultyUser2.Email!,
                         Phone = "0850001002"
                     }
                 };
@@ -188,8 +186,8 @@ namespace VgcCollege.Web.Data
 
             if (!context.FacultyCourseAssignments.Any())
             {
-                var faculty1 = await context.FacultyProfiles.FirstAsync(f => f.Email == "faculty1@vgc.ie");
-                var faculty2 = await context.FacultyProfiles.FirstAsync(f => f.Email == "faculty2@vgc.ie");
+                var faculty1 = await context.FacultyProfiles.FirstAsync(f => f.IdentityUserId == facultyUser1.Id);
+                var faculty2 = await context.FacultyProfiles.FirstAsync(f => f.IdentityUserId == facultyUser2.Id);
 
                 var hdip = await context.Courses.FirstAsync(c => c.Name == "Higher Diploma in Computing");
                 var business = await context.Courses.FirstAsync(c => c.Name == "Business Management");

@@ -4,65 +4,124 @@
     ViewData["Title"] = "Dashboard";
 }
 
-<div class="container mt-4">
-    <div class="text-center mb-5">
-        <h1 class="display-5 fw-bold">VGC College Dashboard</h1>
-        <p class="text-muted">Overview of the academic management system</p>
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="p-4 rounded shadow-sm bg-light border">
+                <h1 class="display-6 fw-bold mb-2">VgcCollege Dashboard</h1>
+                <p class="text-muted mb-0">
+                    Welcome to the academic management system. Use the dashboard below to access the main sections of the application.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-6 col-xl-3">
+            <a asp-controller="StudentProfiles" asp-action="Index" class="text-decoration-none">
+                <div class="card shadow-sm border-0 h-100 dashboard-card">
+                    <div class="card-body">
+                        <h5 class="card-title text-dark">Students</h5>
+                        <h2 class="fw-bold text-primary">@Model.TotalStudents</h2>
+                        <p class="card-text text-muted mb-0">Manage student profiles and records.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <a asp-controller="Courses" asp-action="Index" class="text-decoration-none">
+                <div class="card shadow-sm border-0 h-100 dashboard-card">
+                    <div class="card-body">
+                        <h5 class="card-title text-dark">Courses</h5>
+                        <h2 class="fw-bold text-success">@Model.TotalCourses</h2>
+                        <p class="card-text text-muted mb-0">View and manage all courses.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <a asp-controller="FacultyProfiles" asp-action="Index" class="text-decoration-none">
+                <div class="card shadow-sm border-0 h-100 dashboard-card">
+                    <div class="card-body">
+                        <h5 class="card-title text-dark">Lecturers</h5>
+                        <h2 class="fw-bold text-warning">@Model.TotalLecturers</h2>
+                        <p class="card-text text-muted mb-0">Manage faculty profiles and staff data.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <a asp-controller="Branches" asp-action="Index" class="text-decoration-none">
+                <div class="card shadow-sm border-0 h-100 dashboard-card">
+                    <div class="card-body">
+                        <h5 class="card-title text-dark">Branches</h5>
+                        <h2 class="fw-bold text-danger">@Model.TotalBranches</h2>
+                        <p class="card-text text-muted mb-0">View and manage campus branches.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
     </div>
 
     <div class="row g-4">
-        <div class="col-md-6 col-lg-3">
-            <div class="card shadow-sm border-0 text-center h-100">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
-                    <h5 class="card-title text-primary">Students</h5>
-                    <h2 class="fw-bold">@Model.TotalStudents</h2>
-                    <p class="text-muted mb-0">Registered students</p>
+                    <h4 class="card-title mb-3">Quick Access</h4>
+                    <p class="text-muted">
+                        Use the shortcuts below to quickly navigate to the most important areas of the system.
+                    </p>
+
+                    <div class="d-flex flex-wrap gap-2">
+                        <a asp-controller="StudentProfiles" asp-action="Index" class="btn btn-outline-primary">Students</a>
+                        <a asp-controller="Courses" asp-action="Index" class="btn btn-outline-success">Courses</a>
+                        <a asp-controller="CourseEnrolments" asp-action="Index" class="btn btn-outline-secondary">Enrolments</a>
+                        <a asp-controller="FacultyProfiles" asp-action="Index" class="btn btn-outline-warning">Lecturers</a>
+                        <a asp-controller="Branches" asp-action="Index" class="btn btn-outline-danger">Branches</a>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-6 col-lg-3">
-            <div class="card shadow-sm border-0 text-center h-100">
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
-                    <h5 class="card-title text-success">Courses</h5>
-                    <h2 class="fw-bold">@Model.TotalCourses</h2>
-                    <p class="text-muted mb-0">Available courses</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-3">
-            <div class="card shadow-sm border-0 text-center h-100">
-                <div class="card-body">
-                    <h5 class="card-title text-warning">Lecturers</h5>
-                    <h2 class="fw-bold">@Model.TotalLecturers</h2>
-                    <p class="text-muted mb-0">Academic staff</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-3">
-            <div class="card shadow-sm border-0 text-center h-100">
-                <div class="card-body">
-                    <h5 class="card-title text-danger">Branches</h5>
-                    <h2 class="fw-bold">@Model.TotalBranches</h2>
-                    <p class="text-muted mb-0">Campus branches</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="mt-5">
-        <div class="card shadow-sm border-0">
-            <div class="card-body">
-                <h4 class="mb-3">Quick Access</h4>
-                <div class="d-flex flex-wrap gap-2">
-                    <a asp-controller="Students" asp-action="Index" class="btn btn-outline-primary">Students</a>
-                    <a asp-controller="Courses" asp-action="Index" class="btn btn-outline-success">Courses</a>
-                    <a asp-controller="Lecturers" asp-action="Index" class="btn btn-outline-warning">Lecturers</a>
-                    <a asp-controller="Branches" asp-action="Index" class="btn btn-outline-danger">Branches</a>
+                    <h4 class="card-title mb-3">System Overview</h4>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Total Students</span>
+                            <strong>@Model.TotalStudents</strong>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Total Courses</span>
+                            <strong>@Model.TotalCourses</strong>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Total Lecturers</span>
+                            <strong>@Model.TotalLecturers</strong>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Total Branches</span>
+                            <strong>@Model.TotalBranches</strong>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .dashboard-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        border-radius: 14px;
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.12);
+    }
+</style>

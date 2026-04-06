@@ -2,12 +2,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VgcCollege.Web.Data;
 using VgcCollege.Web.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace VgcCollege.Web.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ApplicationDbContext _context;
+
 
         public HomeController(ApplicationDbContext context)
         {
@@ -16,6 +19,7 @@ namespace VgcCollege.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
+
             var vm = new DashboardViewModel
             {
                 TotalStudents = await _context.StudentProfiles.CountAsync(),
@@ -26,5 +30,7 @@ namespace VgcCollege.Web.Controllers
 
             return View(vm);
         }
+
     }
+
 }

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Serilog;
 using VgcCollege.Web.Data;
 using VgcCollege.Web.Models;
+using VgcCollege.Web.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +50,8 @@ builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
+app.UseErrorHandling();
+
 // Seed roles + users
 using (var scope = app.Services.CreateScope())
 {
@@ -59,18 +62,15 @@ using (var scope = app.Services.CreateScope())
 // Error handling
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
-}
-else
-{
-    app.UseDeveloperExceptionPage();
 }
 
 // app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseRequestLogging();
 
 app.UseAuthentication();
 app.UseAuthorization();
