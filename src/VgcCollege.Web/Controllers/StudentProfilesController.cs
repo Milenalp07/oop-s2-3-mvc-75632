@@ -24,7 +24,27 @@ namespace VgcCollege.Web.Controllers
         // GET: StudentProfiles
         public async Task<IActionResult> Index()
         {
-            return View(await _context.StudentProfiles.ToListAsync());
+            var students = await _context.StudentProfiles
+                .AsNoTracking()
+                .OrderBy(s => s.Name)
+                .ToListAsync();
+
+            var enrolmentMap = await _context.CourseEnrolments
+                .Include(e => e.Course)
+                .AsNoTracking()
+                .GroupBy(e => e.StudentProfileId)
+                .ToDictionaryAsync(
+                    g => g.Key,
+                    g => g
+                        .Where(e => e.Course != null)
+                        .Select(e => e.Course!.Name)
+                        .Distinct()
+                        .ToList()
+                );
+
+            ViewBag.EnrolmentMap = enrolmentMap;
+
+            return View(students);
         }
 
         // GET: StudentProfiles/Details/5

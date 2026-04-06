@@ -29,7 +29,7 @@ namespace VgcCollege.Web.Data
 
             builder.Entity<CourseEnrolment>()
                 .HasOne(e => e.StudentProfile)
-                .WithMany()
+                .WithMany(s => s.CourseEnrolments)
                 .HasForeignKey(e => e.StudentProfileId)
                 .OnDelete(DeleteBehavior.Restrict);
 

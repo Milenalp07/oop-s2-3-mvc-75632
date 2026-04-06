@@ -622,7 +622,7 @@ namespace VgcCollege.Web.Migrations
                         .IsRequired();
 
                     b.HasOne("VgcCollege.Web.Models.StudentProfile", "StudentProfile")
-                        .WithMany()
+                        .WithMany("CourseEnrolments")
                         .HasForeignKey("StudentProfileId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -715,6 +715,11 @@ namespace VgcCollege.Web.Migrations
             modelBuilder.Entity("VgcCollege.Web.Models.FacultyProfile", b =>
                 {
                     b.Navigation("FacultyCourseAssignments");
+                });
+
+            modelBuilder.Entity("VgcCollege.Web.Models.StudentProfile", b =>
+                {
+                    b.Navigation("CourseEnrolments");
                 });
 #pragma warning restore 612, 618
         }

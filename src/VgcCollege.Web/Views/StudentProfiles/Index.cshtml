@@ -1,7 +1,8 @@
 @model IEnumerable<VgcCollege.Web.Models.StudentProfile>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Student Profiles";
+    var enrolmentMap = ViewBag.EnrolmentMap as Dictionary<int, List<string>> ?? new Dictionary<int, List<string>>();
 }
 
 <h1>Student Profiles</h1>
@@ -10,57 +11,42 @@
     <a asp-action="Create" class="btn btn-primary">Create New</a>
 </p>
 
-<table class="table">
+<table class="table table-striped table-hover">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.IdentityUserId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Phone)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Address)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StudentNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DOB)
-            </th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Student Number</th>
+            <th>DOB</th>
+            <th>Course</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
+            var courses = enrolmentMap.ContainsKey(item.Id)
+                ? enrolmentMap[item.Id]
+                : new List<string>();
+
             <tr>
+                <td>@item.Name</td>
+                <td>@item.Email</td>
+                <td>@item.Phone</td>
+                <td>@item.Address</td>
+                <td>@item.StudentNumber</td>
+                <td>@(item.DOB?.ToString("dd/MM/yyyy") ?? "")</td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.IdentityUserId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Phone)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Address)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StudentNumber)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DOB)
+                    @if (courses.Any())
+                    {
+                        @string.Join(", ", courses)
+                    }
+                    else
+                    {
+                        <span class="text-muted">Not enrolled</span>
+                    }
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

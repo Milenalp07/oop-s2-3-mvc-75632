@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace VgcCollege.Web.Models
@@ -24,5 +25,7 @@ namespace VgcCollege.Web.Models
 
         [DataType(DataType.Date)]
         public DateTime? DOB { get; set; }
+
+        public ICollection<CourseEnrolment> CourseEnrolments { get; set; } = new List<CourseEnrolment>();
     }
 }

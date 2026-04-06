@@ -11,8 +11,8 @@ using VgcCollege.Web.Data;
 namespace VgcCollege.Web.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260406165329_RemoveFacultyEmail")]
-    partial class RemoveFacultyEmail
+    [Migration("20260406171619_FixRelationships")]
+    partial class FixRelationships
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -625,7 +625,7 @@ namespace VgcCollege.Web.Migrations
                         .IsRequired();
 
                     b.HasOne("VgcCollege.Web.Models.StudentProfile", "StudentProfile")
-                        .WithMany()
+                        .WithMany("CourseEnrolments")
                         .HasForeignKey("StudentProfileId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -718,6 +718,11 @@ namespace VgcCollege.Web.Migrations
             modelBuilder.Entity("VgcCollege.Web.Models.FacultyProfile", b =>
                 {
                     b.Navigation("FacultyCourseAssignments");
+                });
+
+            modelBuilder.Entity("VgcCollege.Web.Models.StudentProfile", b =>
+                {
+                    b.Navigation("CourseEnrolments");
                 });
 #pragma warning restore 612, 618
         }

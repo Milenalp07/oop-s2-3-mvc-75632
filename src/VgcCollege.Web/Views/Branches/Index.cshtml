@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Branches";
+    var lecturerMap = ViewBag.LecturerMap as Dictionary<int, List<string>> ?? new Dictionary<int, List<string>>();
 }
 
 <h1>Branches</h1>
@@ -10,20 +11,51 @@
     <a asp-action="Create" class="btn btn-primary">Create New Branch</a>
 </p>
 
-<table class="table">
+<table class="table table-striped table-hover">
     <thead>
         <tr>
             <th>Name</th>
             <th>Address</th>
+            <th>Courses</th>
+            <th>Total Courses</th>
+            <th>Lecturers</th>
+            <th>Total Lecturers</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
+            var courses = item.Courses?.Select(c => c.Name).Distinct().ToList() ?? new List<string>();
+            var lecturers = lecturerMap.ContainsKey(item.Id)
+                ? lecturerMap[item.Id]
+                : new List<string>();
+
             <tr>
                 <td>@item.Name</td>
                 <td>@item.Address</td>
+                <td>
+                    @if (courses.Any())
+                    {
+                        @string.Join(", ", courses)
+                    }
+                    else
+                    {
+                        <span class="text-muted">No courses</span>
+                    }
+                </td>
+                <td>@courses.Count</td>
+                <td>
+                    @if (lecturers.Any())
+                    {
+                        @string.Join(", ", lecturers)
+                    }
+                    else
+                    {
+                        <span class="text-muted">No lecturers assigned</span>
+                    }
+                </td>
+                <td>@lecturers.Count</td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |

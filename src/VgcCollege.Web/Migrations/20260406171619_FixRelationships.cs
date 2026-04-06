@@ -5,7 +5,7 @@
 namespace VgcCollege.Web.Migrations
 {
     /// <inheritdoc />
-    public partial class RemoveFacultyEmail : Migration
+    public partial class FixRelationships : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
