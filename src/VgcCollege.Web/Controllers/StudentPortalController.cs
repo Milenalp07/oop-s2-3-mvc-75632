@@ -42,10 +42,10 @@ namespace VgcCollege.Web.Controllers
                 return NotFound();
 
             var enrolments = await _context.CourseEnrolments
-                .Include(e => e.Course)
+                .Include(e => e.Course!)
                     .ThenInclude(c => c.Branch)
                 .Where(e => e.StudentProfileId == student.Id)
-                .OrderBy(e => e.Course!.Name)
+                .OrderBy(e => e.Course != null ? e.Course.Name : string.Empty)
                 .ToListAsync();
 
             return View(enrolments);
@@ -58,7 +58,7 @@ namespace VgcCollege.Web.Controllers
                 return NotFound();
 
             var attendance = await _context.AttendanceRecords
-                .Include(a => a.CourseEnrolment)
+                .Include(a => a.CourseEnrolment!)
                     .ThenInclude(e => e.Course)
                 .Where(a => a.CourseEnrolment != null && a.CourseEnrolment.StudentProfileId == student.Id)
                 .OrderByDescending(a => a.Date)
@@ -74,11 +74,13 @@ namespace VgcCollege.Web.Controllers
                 return NotFound();
 
             var results = await _context.AssignmentResults
-                .Include(r => r.Assignment)
-                    .ThenInclude(a => a!.Course)
+                .Include(r => r.Assignment!)
+                    .ThenInclude(a => a.Course)
                 .Include(r => r.CourseEnrolment)
-                .Where(r => r.CourseEnrolment != null && r.CourseEnrolment.StudentProfileId == student.Id)
-                .OrderBy(r => r.Assignment!.DueDate)
+                .Where(r => r.CourseEnrolment != null &&
+                            r.Assignment != null &&
+                            r.CourseEnrolment.StudentProfileId == student.Id)
+                .OrderBy(r => r.Assignment != null ? r.Assignment.DueDate : DateTime.MaxValue)
                 .ToListAsync();
 
             return View(results);
@@ -99,7 +101,6 @@ namespace VgcCollege.Web.Controllers
             var exams = await _context.Exams
                 .Include(e => e.Course)
                 .Where(e => enrolledCourseIds.Contains(e.CourseId))
-                .OrderBy(e => e.ExamDate)
                 .ToListAsync();
 
             return View(exams);

@@ -291,21 +291,21 @@ namespace VgcCollege.Web.Data
                     {
                         CourseId = hdip.Id,
                         Title = "Programming Fundamentals CA",
-                        MaxScore = 100,
+                        TotalMarks = 100,
                         DueDate = new DateTime(2026, 4, 10)
                     },
                     new Assignment
                     {
                         CourseId = business.Id,
                         Title = "Marketing Report",
-                        MaxScore = 100,
+                        TotalMarks = 100,
                         DueDate = new DateTime(2026, 4, 15)
                     },
                     new Assignment
                     {
                         CourseId = data.Id,
                         Title = "Statistics Project",
-                        MaxScore = 100,
+                        TotalMarks = 100,
                         DueDate = new DateTime(2026, 4, 20)
                     }
                 };
@@ -329,22 +329,22 @@ namespace VgcCollege.Web.Data
                     new AssignmentResult
                     {
                         AssignmentId = a1.Id,
-                        StudentProfileId = student1.Id,
-                        Score = 88,
+                        CourseEnrolmentId = student1.Id,
+                        Marks = 88,
                         Feedback = "Very good work."
                     },
                     new AssignmentResult
                     {
                         AssignmentId = a2.Id,
-                        StudentProfileId = student2.Id,
-                        Score = 91,
+                        CourseEnrolmentId = student2.Id,
+                        Marks = 91,
                         Feedback = "Excellent analysis."
                     },
                     new AssignmentResult
                     {
                         AssignmentId = a3.Id,
-                        StudentProfileId = student3.Id,
-                        Score = 84,
+                        CourseEnrolmentId = student3.Id,
+                        Marks = 84,
                         Feedback = "Good use of data."
                     }
                 };

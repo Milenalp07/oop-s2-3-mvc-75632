@@ -37,22 +37,9 @@ namespace VgcCollege.Web.Controllers
 
             if (User.IsInRole("Faculty"))
             {
-                var user = await _userManager.GetUserAsync(User);
-
-                var faculty = await _context.FacultyProfiles
-                    .FirstOrDefaultAsync(f => f.IdentityUserId == user!.Id);
-
-                var courseCount = 0;
-
-                if (faculty != null)
-                {
-                    courseCount = await _context.Courses
-                        .CountAsync(c => c.FacultyProfileId == faculty.Id);
-                }
-
                 var vm = new FacultyDashboardViewModel
                 {
-                    TotalAssignedCourses = courseCount,
+                    TotalAssignedCourses = await _context.Courses.CountAsync(),
                     TotalEnrolments = await _context.CourseEnrolments.CountAsync(),
                     TotalAttendanceRecords = await _context.AttendanceRecords.CountAsync()
                 };

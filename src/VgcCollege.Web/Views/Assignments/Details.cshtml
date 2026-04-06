@@ -1,0 +1,63 @@
+﻿@model VgcCollege.Web.Models.Assignment
+
+@{
+    ViewData["Title"] = "Assignment Details";
+    var results = ViewBag.Results as IEnumerable<VgcCollege.Web.Models.AssignmentResult>;
+}
+
+<h1>Assignment Details</h1>
+
+<div>
+    <h4>Assignment</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">Title</dt>
+        <dd class="col-sm-10">@Model.Title</dd>
+
+        <dt class="col-sm-2">Description</dt>
+        <dd class="col-sm-10">@Model.Description</dd>
+
+        <dt class="col-sm-2">Course</dt>
+        <dd class="col-sm-10">@(Model.Course?.Name ?? "")</dd>
+
+        <dt class="col-sm-2">Due Date</dt>
+        <dd class="col-sm-10">@Model.DueDate.ToShortDateString()</dd>
+
+        <dt class="col-sm-2">Max Score</dt>
+        <dd class="col-sm-10">@Model.TotalMarks</dd>
+    </dl>
+</div>
+
+<h4 class="mt-4">Results</h4>
+
+@if (results != null && results.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Student</th>
+                <th>Score</th>
+                <th>Feedback</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var result in results)
+            {
+                <tr>
+                    <td>@(result.CourseEnrolment?.StudentProfile?.Name ?? "")</td>
+                    <td>@result.Marks</td>
+                    <td>@result.Feedback</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No results found.</p>
+}
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

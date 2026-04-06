@@ -21,10 +21,7 @@
                         <thead class="table-light">
                             <tr>
                                 <th>Course</th>
-                                <th>Exam Title</th>
-                                <th>Date</th>
-                                <th>Location</th>
-                                <th>Total Marks</th>
+                                <th>Exam</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -33,9 +30,6 @@
                                 <tr>
                                     <td>@item.Course?.Name</td>
                                     <td>@item.Title</td>
-                                    <td>@item.ExamDate.ToString("dd/MM/yyyy HH:mm")</td>
-                                    <td>@item.Location</td>
-                                    <td>@item.TotalMarks</td>
                                 </tr>
                             }
                         </tbody>

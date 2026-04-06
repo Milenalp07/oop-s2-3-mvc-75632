@@ -21,13 +21,13 @@ namespace VgcCollege.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var assignments = await _context.FacultyCourseAssignments
-                .Include(a => a.FacultyProfile)
+                .Include(a => a.FacultyProfile!)
                     .ThenInclude(f => f.IdentityUser)
-                .Include(a => a.Course)
+                .Include(a => a.Course!)
                     .ThenInclude(c => c.Branch)
                 .AsNoTracking()
-                .OrderBy(a => a.FacultyProfile!.Name)
-                .ThenBy(a => a.Course!.Name)
+                .OrderBy(a => a.FacultyProfile != null ? a.FacultyProfile.Name : string.Empty)
+                .ThenBy(a => a.Course != null ? a.Course.Name : string.Empty)
                 .ToListAsync();
 
             return View(assignments);
@@ -42,9 +42,9 @@ namespace VgcCollege.Web.Controllers
             }
 
             var assignment = await _context.FacultyCourseAssignments
-                .Include(a => a.FacultyProfile)
+                .Include(a => a.FacultyProfile!)
                     .ThenInclude(f => f.IdentityUser)
-                .Include(a => a.Course)
+                .Include(a => a.Course!)
                     .ThenInclude(c => c.Branch)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -162,9 +162,9 @@ namespace VgcCollege.Web.Controllers
             }
 
             var assignment = await _context.FacultyCourseAssignments
-                .Include(a => a.FacultyProfile)
+                .Include(a => a.FacultyProfile!)
                     .ThenInclude(f => f.IdentityUser)
-                .Include(a => a.Course)
+                .Include(a => a.Course!)
                     .ThenInclude(c => c.Branch)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.Id == id);

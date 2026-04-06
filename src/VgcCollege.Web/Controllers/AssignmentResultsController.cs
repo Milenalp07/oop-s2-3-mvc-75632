@@ -7,7 +7,7 @@ using VgcCollege.Web.Models;
 
 namespace VgcCollege.Web.Controllers
 {
-    [Authorize(Roles = "Admin,Faculty")]
+    [Authorize]
     public class AssignmentResultsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -17,44 +17,70 @@ namespace VgcCollege.Web.Controllers
             _context = context;
         }
 
+        // GET: AssignmentResults
+        [Authorize(Roles = "Admin,Faculty")]
         public async Task<IActionResult> Index()
         {
-            var results = _context.AssignmentResults
-                .Include(a => a.Assignment)
-                    .ThenInclude(a => a!.Course)
-                .Include(a => a.CourseEnrolment)
-                    .ThenInclude(e => e!.StudentProfile);
+            var results = await _context.AssignmentResults
+                .Include(r => r.Assignment!)
+                    .ThenInclude(a => a.Course)
+                .Include(r => r.CourseEnrolment!)
+                    .ThenInclude(e => e.StudentProfile)
+                .AsNoTracking()
+                .OrderByDescending(r => r.Assignment != null ? r.Assignment.DueDate : DateTime.MinValue)
+                .ThenBy(r => r.CourseEnrolment != null && r.CourseEnrolment.StudentProfile != null
+                    ? r.CourseEnrolment.StudentProfile.Name
+                    : string.Empty)
+                .ToListAsync();
 
-            return View(await results.ToListAsync());
+            return View(results);
         }
 
+        // GET: AssignmentResults/Details/5
+        [Authorize(Roles = "Admin,Faculty")]
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+                return NotFound();
 
-            var result = await _context.AssignmentResults
-                .Include(a => a.Assignment)
-                    .ThenInclude(a => a!.Course)
-                .Include(a => a.CourseEnrolment)
-                    .ThenInclude(e => e!.StudentProfile)
+            var assignmentResult = await _context.AssignmentResults
+                .Include(r => r.Assignment!)
+                    .ThenInclude(a => a.Course)
+                .Include(r => r.CourseEnrolment!)
+                    .ThenInclude(e => e.StudentProfile)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (result == null) return NotFound();
+            if (assignmentResult == null)
+                return NotFound();
 
-            return View(result);
+            return View(assignmentResult);
         }
 
-        public IActionResult Create()
+        // GET: AssignmentResults/Create
+        [Authorize(Roles = "Admin,Faculty")]
+        public async Task<IActionResult> Create()
         {
-            ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Title");
-            ViewData["CourseEnrolmentId"] = new SelectList(_context.CourseEnrolments, "Id", "Id");
+            await LoadDropdowns();
             return View();
         }
 
+        // POST: AssignmentResults/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CourseEnrolmentId,AssignmentId,Marks,Grade,Feedback")] AssignmentResult assignmentResult)
+        [Authorize(Roles = "Admin,Faculty")]
+        public async Task<IActionResult> Create([Bind("Id,AssignmentId,CourseEnrolmentId,Score,Feedback")] AssignmentResult assignmentResult)
         {
+            bool duplicateExists = await _context.AssignmentResults
+                .AnyAsync(r =>
+                    r.AssignmentId == assignmentResult.AssignmentId &&
+                    r.CourseEnrolmentId == assignmentResult.CourseEnrolmentId);
+
+            if (duplicateExists)
+            {
+                ModelState.AddModelError("", "This student already has a result for this assignment.");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(assignmentResult);
@@ -62,28 +88,44 @@ namespace VgcCollege.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Title", assignmentResult.AssignmentId);
-            ViewData["CourseEnrolmentId"] = new SelectList(_context.CourseEnrolments, "Id", "Id", assignmentResult.CourseEnrolmentId);
+            await LoadDropdowns(assignmentResult.AssignmentId, assignmentResult.CourseEnrolmentId);
             return View(assignmentResult);
         }
 
+        // GET: AssignmentResults/Edit/5
+        [Authorize(Roles = "Admin,Faculty")]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+                return NotFound();
 
             var assignmentResult = await _context.AssignmentResults.FindAsync(id);
-            if (assignmentResult == null) return NotFound();
+            if (assignmentResult == null)
+                return NotFound();
 
-            ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Title", assignmentResult.AssignmentId);
-            ViewData["CourseEnrolmentId"] = new SelectList(_context.CourseEnrolments, "Id", "Id", assignmentResult.CourseEnrolmentId);
+            await LoadDropdowns(assignmentResult.AssignmentId, assignmentResult.CourseEnrolmentId);
             return View(assignmentResult);
         }
 
+        // POST: AssignmentResults/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CourseEnrolmentId,AssignmentId,Marks,Grade,Feedback")] AssignmentResult assignmentResult)
+        [Authorize(Roles = "Admin,Faculty")]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,AssignmentId,CourseEnrolmentId,Score,Feedback")] AssignmentResult assignmentResult)
         {
-            if (id != assignmentResult.Id) return NotFound();
+            if (id != assignmentResult.Id)
+                return NotFound();
+
+            bool duplicateExists = await _context.AssignmentResults
+                .AnyAsync(r =>
+                    r.Id != assignmentResult.Id &&
+                    r.AssignmentId == assignmentResult.AssignmentId &&
+                    r.CourseEnrolmentId == assignmentResult.CourseEnrolmentId);
+
+            if (duplicateExists)
+            {
+                ModelState.AddModelError("", "This student already has a result for this assignment.");
+            }
 
             if (ModelState.IsValid)
             {
@@ -94,39 +136,48 @@ namespace VgcCollege.Web.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_context.AssignmentResults.Any(e => e.Id == assignmentResult.Id))
+                    if (!AssignmentResultExists(assignmentResult.Id))
                         return NotFound();
-                    else
-                        throw;
+
+                    throw;
                 }
 
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Title", assignmentResult.AssignmentId);
-            ViewData["CourseEnrolmentId"] = new SelectList(_context.CourseEnrolments, "Id", "Id", assignmentResult.CourseEnrolmentId);
+            await LoadDropdowns(assignmentResult.AssignmentId, assignmentResult.CourseEnrolmentId);
             return View(assignmentResult);
         }
 
+        // GET: AssignmentResults/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+                return NotFound();
 
             var assignmentResult = await _context.AssignmentResults
-                .Include(a => a.Assignment)
-                .Include(a => a.CourseEnrolment)
+                .Include(r => r.Assignment!)
+                    .ThenInclude(a => a.Course)
+                .Include(r => r.CourseEnrolment!)
+                    .ThenInclude(e => e.StudentProfile)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (assignmentResult == null) return NotFound();
+            if (assignmentResult == null)
+                return NotFound();
 
             return View(assignmentResult);
         }
 
+        // POST: AssignmentResults/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var assignmentResult = await _context.AssignmentResults.FindAsync(id);
+
             if (assignmentResult != null)
             {
                 _context.AssignmentResults.Remove(assignmentResult);
@@ -134,6 +185,50 @@ namespace VgcCollege.Web.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+        }
+
+        private bool AssignmentResultExists(int id)
+        {
+            return _context.AssignmentResults.Any(e => e.Id == id);
+        }
+
+        private async Task LoadDropdowns(object? selectedAssignment = null, object? selectedEnrolment = null)
+        {
+            var assignments = await _context.Assignments
+                .Include(a => a.Course)
+                .OrderByDescending(a => a.DueDate)
+                .ThenBy(a => a.Title)
+                .ToListAsync();
+
+            var enrolments = await _context.CourseEnrolments
+                .Include(e => e.StudentProfile)
+                .Include(e => e.Course)
+                .OrderBy(e => e.StudentProfile != null ? e.StudentProfile.Name : string.Empty)
+                .ToListAsync();
+
+            ViewData["AssignmentId"] = new SelectList(
+                assignments.Select(a => new
+                {
+                    a.Id,
+                    Display = a.Course != null ? $"{a.Title} - {a.Course.Name}" : a.Title
+                }),
+                "Id",
+                "Display",
+                selectedAssignment
+            );
+
+            ViewData["CourseEnrolmentId"] = new SelectList(
+                enrolments.Select(e => new
+                {
+                    e.Id,
+                    Display = e.StudentProfile != null && e.Course != null
+                        ? $"{e.StudentProfile.Name} - {e.Course.Name}"
+                        : $"Enrolment #{e.Id}"
+                }),
+                "Id",
+                "Display",
+                selectedEnrolment
+            );
         }
     }
 }

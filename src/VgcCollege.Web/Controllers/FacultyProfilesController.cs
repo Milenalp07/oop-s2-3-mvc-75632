@@ -21,13 +21,13 @@ namespace VgcCollege.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var facultyProfiles = await _context.FacultyProfiles
-                .Include(f => f.IdentityUser)
+                .Include(f => f.IdentityUser!)
                 .AsNoTracking()
                 .OrderBy(f => f.Name)
                 .ToListAsync();
 
             var assignmentMap = await _context.FacultyCourseAssignments
-                .Include(a => a.Course)
+                .Include(a => a.Course!)
                     .ThenInclude(c => c.Branch)
                 .AsNoTracking()
                 .GroupBy(a => a.FacultyProfileId)
@@ -65,7 +65,7 @@ namespace VgcCollege.Web.Controllers
             }
 
             var facultyProfile = await _context.FacultyProfiles
-                .Include(f => f.IdentityUser)
+                .Include(f => f.IdentityUser!)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.Id == id);
 
@@ -75,14 +75,14 @@ namespace VgcCollege.Web.Controllers
             }
 
             var courses = await _context.FacultyCourseAssignments
-                .Include(a => a.Course)
+                .Include(a => a.Course!)
                     .ThenInclude(c => c.Branch)
                 .Where(a => a.FacultyProfileId == facultyProfile.Id)
                 .AsNoTracking()
                 .Select(a => a.Course)
                 .Where(c => c != null)
-                .Distinct()
                 .OrderBy(c => c!.Name)
+                .Distinct()
                 .ToListAsync();
 
             ViewBag.Courses = courses;
@@ -199,7 +199,7 @@ namespace VgcCollege.Web.Controllers
             }
 
             var facultyProfile = await _context.FacultyProfiles
-                .Include(f => f.IdentityUser)
+                .Include(f => f.IdentityUser!)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.Id == id);
 

@@ -22,8 +22,6 @@
                             <tr>
                                 <th>Date</th>
                                 <th>Course</th>
-                                <th>Status</th>
-                                <th>Notes</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -32,17 +30,6 @@
                                 <tr>
                                     <td>@item.Date.ToString("dd/MM/yyyy")</td>
                                     <td>@item.CourseEnrolment?.Course?.Name</td>
-                                    <td>
-                                        @if (item.IsPresent)
-                                        {
-                                            <span class="badge bg-success">Present</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="badge bg-danger">Absent</span>
-                                        }
-                                    </td>
-                                    <td>@item.Notes</td>
                                 </tr>
                             }
                         </tbody>

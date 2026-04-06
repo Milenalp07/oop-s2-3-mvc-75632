@@ -21,7 +21,6 @@
                         <thead class="table-light">
                             <tr>
                                 <th>Course</th>
-                                <th>Code</th>
                                 <th>Start Date</th>
                                 <th>End Date</th>
                                 <th>Branch</th>
@@ -34,21 +33,11 @@
                             {
                                 <tr>
                                     <td>@item.Course?.Name</td>
-                                    <td>@item.Course?.Code</td>
                                     <td>@item.Course?.StartDate.ToString("dd/MM/yyyy")</td>
                                     <td>@item.Course?.EndDate.ToString("dd/MM/yyyy")</td>
                                     <td>@item.Course?.Branch?.Name</td>
                                     <td>@item.EnrolDate.ToString("dd/MM/yyyy")</td>
-                                    <td>
-                                        @if (item.Status)
-                                        {
-                                            <span class="badge bg-success">Active</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="badge bg-secondary">Inactive</span>
-                                        }
-                                    </td>
+                                    <td>@item.Status</td>
                                 </tr>
                             }
                         </tbody>

@@ -22,7 +22,7 @@ namespace VgcCollege.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var exams = await _context.Exams
-                .Include(e => e.Course)
+                .Include(e => e.Course!)
                     .ThenInclude(c => c.Branch)
                 .AsNoTracking()
                 .OrderByDescending(e => e.Date)
@@ -41,7 +41,7 @@ namespace VgcCollege.Web.Controllers
             }
 
             var exam = await _context.Exams
-                .Include(e => e.Course)
+                .Include(e => e.Course!)
                     .ThenInclude(c => c.Branch)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -145,7 +145,7 @@ namespace VgcCollege.Web.Controllers
             }
 
             var exam = await _context.Exams
-                .Include(e => e.Course)
+                .Include(e => e.Course!)
                     .ThenInclude(c => c.Branch)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.Id == id);
